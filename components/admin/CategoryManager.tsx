@@ -108,7 +108,7 @@ export function CategoryManager({ categories, readOnly }: { categories: AdminCat
       <TableFrame><table className={adminTableClass}><thead><tr><th>Danh mục</th><th>Slug</th><th>Sản phẩm</th><th>Thứ tự</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody>{categories.map((category) => editing === category.id ? (
         <tr key={category.id}><td colSpan={6}><CategoryForm initial={category} pending={pending} onCancel={() => setEditing(null)} onSubmit={(event) => void save(event, category.id)} /></td></tr>
       ) : (
-        <tr key={category.id}><td><span className="font-semibold">{category.name}</span><span className="mt-0.5 block max-w-sm text-xs text-[#858074]">{category.description}</span></td><td className="font-mono text-xs">/{category.slug}</td><td>{category.productCount}</td><td>{category.sortOrder}</td><td><ActiveBadge active={category.active} /></td><td><div className="flex gap-2"><button disabled={readOnly} onClick={() => setEditing(category.id)} className="grid size-9 place-items-center rounded-lg border border-[#ded8ca] text-[#4b512b] disabled:opacity-40" aria-label={`Sửa ${category.name}`}><Pencil size={15} /></button>{category.active ? <button disabled={readOnly || pending} onClick={() => void deactivate(category)} className="grid size-9 place-items-center rounded-lg border border-[#e2cdc8] text-[#8f201c] disabled:opacity-40" aria-label={`Ẩn ${category.name}`}><X size={15} /></button> : null}</div></td></tr>
+        <tr key={category.id}><td><span className="font-semibold">{category.name}</span><span className="mt-0.5 block max-w-sm text-xs text-[#858074]">{category.description}</span></td><td className="font-mono text-xs">/{category.slug}</td><td>{category.productCount}</td><td>{category.sortOrder}</td><td><ActiveBadge active={category.active} /></td><td><div className="flex gap-2"><button disabled={readOnly} onClick={() => setEditing(category.id)} className="grid size-11 place-items-center rounded-lg border border-[#ded8ca] text-[#4b512b] disabled:opacity-40" aria-label={`Sửa ${category.name}`}><Pencil size={15} /></button>{category.active ? <button disabled={readOnly || pending} onClick={() => void deactivate(category)} className="grid size-11 place-items-center rounded-lg border border-[#e2cdc8] text-[#8f201c] disabled:opacity-40" aria-label={`Ẩn ${category.name}`}><X size={15} /></button> : null}</div></td></tr>
       ))}</tbody></table></TableFrame>
     </>
   );
@@ -120,7 +120,7 @@ function CategoryForm({ initial, pending, onCancel, onSubmit }: { initial: Draft
   const [image, setImage] = useState<UploadedCategoryImage>({ imageUrl: initial.imageUrl, imageStorageProvider: initial.imageStorageProvider, imageBlobPathname: initial.imageBlobPathname });
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
-  const input = "min-h-10 w-full rounded-lg border border-[#ded8ca] bg-white px-2.5 text-sm";
+  const input = "min-h-11 w-full rounded-lg border border-[#ded8ca] bg-white px-2.5 text-sm";
 
   async function upload(file: File | undefined) {
     if (!file) return;
@@ -167,14 +167,14 @@ function CategoryForm({ initial, pending, onCancel, onSubmit }: { initial: Draft
       <label className="text-xs font-bold">Alt ảnh<input name="imageAlt" defaultValue={initial.imageAlt} required={Boolean(image.imageUrl)} className={`mt-1 ${input}`} /></label>
       <div className="text-xs font-bold">
         Ảnh danh mục
-        <div className="mt-1 flex min-h-10 items-center gap-2">
-          <label className="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-lg border border-[#4b512b] bg-white px-3 text-[#4b512b]"><ImagePlus size={15} /> {uploading ? "Đang tải…" : "Tải ảnh"}<input type="file" className="sr-only" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading || pending} onChange={(event) => void upload(event.target.files?.[0])} /></label>
-          {image.imageUrl ? <button type="button" aria-label="Gỡ ảnh danh mục" onClick={() => void clearImage()} className="grid size-10 place-items-center rounded-lg border border-[#e2cdc8] text-[#8f201c]"><Trash2 size={15} /></button> : null}
+        <div className="mt-1 flex min-h-11 items-center gap-2">
+          <label className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-[#4b512b] bg-white px-3 text-[#4b512b]"><ImagePlus size={15} /> {uploading ? "Đang tải…" : "Tải ảnh"}<input type="file" className="sr-only" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading || pending} onChange={(event) => void upload(event.target.files?.[0])} /></label>
+          {image.imageUrl ? <button type="button" aria-label="Gỡ ảnh danh mục" onClick={() => void clearImage()} className="grid size-11 place-items-center rounded-lg border border-[#e2cdc8] text-[#8f201c]"><Trash2 size={15} /></button> : null}
         </div>
       </div>
       {image.imageUrl ? <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-[#ded8ca] bg-white md:col-span-2 xl:col-span-4"><Image src={image.imageUrl} alt={initial.imageAlt || name || "Ảnh danh mục"} fill unoptimized sizes="480px" className="object-cover" /></div> : null}
       {uploadError ? <p role="alert" className="text-xs text-[#8f201c] md:col-span-2 xl:col-span-4">{uploadError}</p> : null}
-      <div className="flex gap-2 md:col-span-2 xl:col-span-4"><button disabled={pending || uploading} className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-[#4b512b] px-4 text-xs font-bold text-white disabled:opacity-50"><Save size={14} /> Lưu</button><button type="button" onClick={() => void cancel()} className="min-h-10 rounded-lg border border-[#ded8ca] bg-white px-4 text-xs font-bold">Hủy</button></div>
+      <div className="flex gap-2 md:col-span-2 xl:col-span-4"><button disabled={pending || uploading} className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#4b512b] px-4 text-xs font-bold text-white disabled:opacity-50"><Save size={14} /> Lưu</button><button type="button" onClick={() => void cancel()} className="min-h-11 rounded-lg border border-[#ded8ca] bg-white px-4 text-xs font-bold">Hủy</button></div>
     </form>
   );
 }

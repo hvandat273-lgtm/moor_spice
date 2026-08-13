@@ -36,5 +36,5 @@ export function ProductDeactivateButton({ id, active, updatedAt }: { id: string;
   }
 
   const Icon = active ? PowerOff : Power;
-  return <button type="button" onClick={toggle} disabled={pending} aria-label={active ? "Ẩn sản phẩm" : "Kích hoạt sản phẩm"} title={active ? "Ẩn sản phẩm" : "Kích hoạt sản phẩm"} className="grid size-9 place-items-center rounded-lg border border-[#ded8ca] bg-white text-[#8f201c] hover:border-[#8f201c] disabled:opacity-50"><Icon size={15} /></button>;
+  return <button type="button" onClick={toggle} disabled={pending} aria-label={active ? "Ẩn sản phẩm" : "Kích hoạt sản phẩm"} title={active ? "Ẩn sản phẩm" : "Kích hoạt sản phẩm"} className="grid size-11 place-items-center rounded-lg border border-[#ded8ca] bg-white text-[#8f201c] hover:border-[#8f201c] disabled:opacity-50"><Icon size={15} /></button>;
 }

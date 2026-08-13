@@ -44,7 +44,7 @@ export function AdminShell({ principal, children }: { principal: AdminPrincipal;
     <div className="fixed inset-0 z-[80] flex overflow-hidden bg-[#f4f1e9] text-[#282820]">
       {open ? <button className="fixed inset-0 z-30 bg-black/35 lg:hidden" aria-label="Đóng điều hướng" onClick={() => setOpen(false)} /> : null}
 
-      <aside className={`fixed inset-y-0 left-0 z-40 flex w-[17.5rem] flex-col border-r border-white/10 bg-[#2f321d] text-white shadow-2xl transition-transform lg:static lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}>
+      <aside className={`fixed inset-y-0 left-0 z-40 flex w-[calc(100vw-2rem)] max-w-[17.5rem] flex-col border-r border-white/10 bg-[#2f321d] text-white shadow-2xl transition-transform lg:static lg:w-[17.5rem] lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="flex h-20 items-center justify-between border-b border-white/10 px-6">
           <Link href="/admin" className="flex items-center gap-3" onClick={() => setOpen(false)}>
             <span className="grid size-10 place-items-center rounded-xl bg-[#b18a45] text-[#2f321d] shadow-lg shadow-black/15">
@@ -55,7 +55,7 @@ export function AdminShell({ principal, children }: { principal: AdminPrincipal;
               <span className="block text-[10px] font-semibold tracking-[0.22em] text-white/55 uppercase">Administration</span>
             </span>
           </Link>
-          <button className="rounded-lg p-2 text-white/70 hover:bg-white/10 lg:hidden" aria-label="Đóng menu" onClick={() => setOpen(false)}><X size={20} /></button>
+          <button className="grid size-11 place-items-center rounded-lg text-white/70 hover:bg-white/10 lg:hidden" aria-label="Đóng menu" onClick={() => setOpen(false)}><X size={20} /></button>
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-5" aria-label="Điều hướng quản trị">
@@ -92,7 +92,7 @@ export function AdminShell({ principal, children }: { principal: AdminPrincipal;
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-16 shrink-0 items-center justify-between border-b border-[#ded8ca] bg-[#fffdf8]/95 px-4 backdrop-blur md:px-7 lg:h-20">
-          <button className="rounded-xl border border-[#ded8ca] bg-white p-2.5 text-[#4b512b] lg:hidden" aria-label="Mở menu" onClick={() => setOpen(true)}><Menu size={20} /></button>
+          <button className="grid size-11 place-items-center rounded-xl border border-[#ded8ca] bg-white text-[#4b512b] lg:hidden" aria-label="Mở menu" onClick={() => setOpen(true)}><Menu size={20} /></button>
           <div className="hidden lg:block">
             <p className="text-[11px] font-bold tracking-[0.18em] text-[#8f201c] uppercase">Moor Spice</p>
             <p className="text-sm text-[#716d61]">Vận hành cửa hàng</p>

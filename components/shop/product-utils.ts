@@ -12,10 +12,7 @@ export function primaryImage(product: Product): ProductImage {
     product.images[0] ?? {
       id: `fallback-${product.id}`,
       url: CATALOG_IMAGE_PLACEHOLDER,
-      // Just the name: this helper runs on the server as well, where there is
-      // no locale context, and the name is already localised by the caller.
-      // A hard-coded Japanese suffix here would leak into the English site.
-      alt: product.name,
+      alt: `${product.name}の商品画像`,
       role: "GALLERY"
     }
   );

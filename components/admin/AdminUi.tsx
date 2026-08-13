@@ -9,7 +9,7 @@ export function AdminPageHeader({ eyebrow, title, description, actions }: { eyeb
         <h1 className="font-display text-3xl leading-tight font-medium text-[#292720] md:text-[2.4rem]">{title}</h1>
         {description ? <p className="mt-2 max-w-2xl text-sm text-[#716d61]">{description}</p> : null}
       </div>
-      {actions ? <div className="flex shrink-0 flex-wrap gap-2">{actions}</div> : null}
+      {actions ? <div className="flex w-full shrink-0 flex-wrap gap-2 sm:w-auto">{actions}</div> : null}
     </div>
   );
 }
@@ -61,9 +61,9 @@ export function AdminPagination({ page, pageCount, href }: { page: number; pageC
   if (pageCount <= 1) return null;
   return (
     <nav className="mt-5 flex items-center justify-between gap-4" aria-label="Phân trang">
-      {page > 1 ? <Link href={href(page - 1)} className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#ded8ca] bg-white px-4 text-sm font-semibold hover:border-[#5f6535]"><ArrowLeft size={15} /> Trước</Link> : <span />}
+      {page > 1 ? <Link href={href(page - 1)} className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-[#ded8ca] bg-white px-4 text-sm font-semibold hover:border-[#5f6535]"><ArrowLeft size={15} /> Trước</Link> : <span />}
       <span className="text-xs font-semibold text-[#716d61]">Trang {page} / {pageCount}</span>
-      {page < pageCount ? <Link href={href(page + 1)} className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#ded8ca] bg-white px-4 text-sm font-semibold hover:border-[#5f6535]">Sau <ArrowRight size={15} /></Link> : <span />}
+      {page < pageCount ? <Link href={href(page + 1)} className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-[#ded8ca] bg-white px-4 text-sm font-semibold hover:border-[#5f6535]">Sau <ArrowRight size={15} /></Link> : <span />}
     </nav>
   );
 }

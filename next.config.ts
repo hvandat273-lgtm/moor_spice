@@ -19,6 +19,7 @@ const publicContentSecurityPolicy = [
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1"],
+  distDir: process.env.NEXT_DIST_DIR?.trim() || ".next",
   env: {
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN ?? process.env.SENTRY_DSN ?? "",
     NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE: process.env.NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE ?? process.env.SENTRY_TRACES_SAMPLE_RATE ?? "0.02",
@@ -33,7 +34,7 @@ const nextConfig: NextConfig = {
       }
     ],
     formats: ["image/avif", "image/webp"],
-    qualities: [75, 82, 100]
+    qualities: [75, 82]
   },
   poweredByHeader: false,
   async headers() {

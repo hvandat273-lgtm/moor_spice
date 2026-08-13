@@ -1,0 +1,729 @@
+/*
+ * Sections transcribed from the Pasta Magic Powder deck.
+ * Shared header/rule/kicker primitives live in app/globals.css (.deck-*).
+ */
+
+/* --- 01 Chef profile ----------------------------------------------------- */
+
+.chefLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.chefPortrait {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--olive);
+  background: #fff;
+  padding: 1.1rem 1.1rem 0.9rem;
+  box-shadow: var(--shadow-card);
+}
+
+.chefPortrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.chefPortrait figcaption {
+  margin-top: 0.85rem;
+  border-top: 1px solid var(--line-soft);
+  color: var(--muted);
+  padding-top: 0.65rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+.chefBody {
+  min-width: 0;
+  padding-top: 0.35rem;
+}
+
+.chefLead {
+  margin: 0;
+  font-family: var(--font-display), "Noto Serif JP", ui-serif, serif;
+  font-size: clamp(1.15rem, 2.2vw, 1.55rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.55;
+}
+
+.chefBio {
+  max-width: 58ch;
+  margin: 1.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 2;
+}
+
+.timeline {
+  margin-top: clamp(1.75rem, 3vw, 2.6rem);
+  border-left: 3px solid var(--vermilion);
+  padding-left: clamp(1.1rem, 2.5vw, 1.85rem);
+}
+
+.timeline h3 {
+  margin: 0 0 1rem;
+  color: var(--gold);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.timeline ol {
+  display: grid;
+  gap: 0.85rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline li {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: baseline;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.timelineYear {
+  color: var(--vermilion);
+  font-family: var(--font-display), ui-serif, serif;
+  font-size: 1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+/* --- 02 Yude theory ------------------------------------------------------ */
+
+.theoryQuote {
+  display: flex;
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  margin: 0 0 clamp(1.75rem, 3.5vw, 2.75rem);
+  border-left: 3px solid var(--gold-soft);
+  background: var(--olive);
+  color: var(--on-forest);
+  padding: clamp(1.5rem, 3.5vw, 2.4rem) clamp(1.35rem, 4vw, 3rem);
+}
+
+.theoryQuote svg {
+  flex: none;
+  margin-top: 0.15rem;
+  color: var(--gold-soft);
+}
+
+.theoryQuote p {
+  max-width: 54ch;
+  margin: 0;
+  font-family: var(--font-display), "Noto Serif JP", ui-serif, serif;
+  font-size: clamp(1rem, 1.9vw, 1.28rem);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  line-height: 2;
+}
+
+.theoryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.85rem, 2vw, 1.5rem);
+  align-items: stretch;
+}
+
+.theoryCard {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: clamp(1.25rem, 2.5vw, 1.9rem);
+}
+
+.theoryCardFeatured {
+  position: relative;
+  border-color: var(--olive);
+  background: var(--olive);
+  color: var(--on-forest);
+  box-shadow: 0 16px 40px rgb(30 47 36 / 18%);
+}
+
+.theoryCardFeatured::before {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  left: -1px;
+  height: 4px;
+  background: var(--vermilion);
+  content: "";
+}
+
+.theoryKicker {
+  margin: 0;
+  color: var(--gold);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.theoryCardFeatured .theoryKicker {
+  color: var(--gold-soft);
+}
+
+.theoryCard h3 {
+  margin: 0.7rem 0 0;
+  font-family: var(--font-display), "Noto Serif JP", ui-serif, serif;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.5;
+}
+
+.theoryValue {
+  display: flex;
+  align-items: baseline;
+  gap: 0.2rem;
+  margin: 0.9rem 0 0;
+  font-family: var(--font-display), ui-serif, serif;
+  line-height: 1;
+}
+
+.theoryValue span {
+  font-size: clamp(2.75rem, 7vw, 4.25rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.theoryValue small {
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-weight: 500;
+}
+
+.theoryMeter {
+  height: 4px;
+  margin-top: 1.1rem;
+  background: color-mix(in srgb, var(--ink) 12%, transparent);
+}
+
+.theoryMeter span {
+  display: block;
+  height: 100%;
+  background: var(--vermilion);
+}
+
+.theoryCardFeatured .theoryMeter {
+  background: color-mix(in srgb, var(--on-forest) 22%, transparent);
+}
+
+.theoryCardFeatured .theoryMeter span {
+  background: var(--gold-soft);
+}
+
+.theoryCaption {
+  margin: 1rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.75;
+}
+
+.theoryBody {
+  margin: 0.6rem 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.9;
+}
+
+.theoryCardFeatured .theoryBody {
+  color: var(--on-forest-muted);
+}
+
+/* --- 03 Italian souvenir ------------------------------------------------- */
+
+.souvenirNote {
+  margin-top: -1.25rem;
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+.souvenirLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.souvenirPack {
+  margin: 0;
+  border: 1px solid var(--line);
+  background: #fff;
+  padding: 1.2rem 1.2rem 1rem;
+  box-shadow: var(--shadow-card);
+}
+
+.souvenirPack img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.souvenirPack figcaption {
+  margin-top: 0.9rem;
+  border-top: 1px solid var(--line-soft);
+  color: var(--muted);
+  padding-top: 0.65rem;
+  font-size: 0.7rem;
+  line-height: 1.6;
+}
+
+.souvenirBody {
+  min-width: 0;
+}
+
+.souvenirLead {
+  margin: 0;
+  font-family: var(--font-display), "Noto Serif JP", ui-serif, serif;
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+}
+
+.souvenirText {
+  max-width: 58ch;
+  margin: 1.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 2;
+}
+
+.featureRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.85rem, 2vw, 1.5rem);
+  margin: clamp(1.75rem, 3vw, 2.4rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.featureRow li {
+  border-top: 1px solid var(--line);
+  padding-top: 0.95rem;
+}
+
+.featureKicker {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin: 0;
+  color: var(--gold);
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.featureRow h3 {
+  margin: 0.6rem 0 0;
+  font-family: var(--font-display), "Noto Serif JP", ui-serif, serif;
+  font-size: clamp(0.98rem, 1.7vw, 1.12rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+}
+
+.featureRow li > p:last-child {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.79rem;
+  line-height: 1.85;
+}
+
+.proposal {
+  margin-top: clamp(1.75rem, 3vw, 2.4rem);
+  padding: clamp(1.2rem, 2.5vw, 1.75rem) clamp(1.2rem, 3vw, 2.1rem);
+}
+
+.proposalLabel {
+  margin: 0;
+  color: var(--gold-soft);
+  font-size: 0.72rem;
+  font-style: italic;
+  letter-spacing: 0.14em;
+}
+
+.proposalText {
+  max-width: 52ch;
+  margin: 0.6rem 0 0;
+  font-size: clamp(0.9rem, 1.6vw, 1rem);
+  line-height: 1.9;
+}
+
+/* --- 04 How to cook ------------------------------------------------------ */
+
+.methodLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.methodAside {
+  border-left: 3px solid var(--vermilion);
+  padding-left: clamp(1.1rem, 2.5vw, 1.6rem);
+}
+
+.methodBlock + .methodBlock {
+  margin-top: 2rem;
+}
+
+.methodBlock h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.9rem;
+  font-family: var(--font-display), "Noto Serif JP", ui-serif, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.methodBlock h3 svg {
+  color: var(--gold);
+}
+
+.equipmentList {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  list-style: none;
+}
+
+.equipmentList li::before {
+  color: var(--gold);
+  content: "・";
+}
+
+.quantityList {
+  margin: 0;
+}
+
+.quantityList > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--line-soft);
+  padding: 0.6rem 0;
+  font-size: 0.86rem;
+}
+
+.quantityList dt {
+  color: var(--muted);
+}
+
+.quantityList dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.quantityHighlight dt,
+.quantityHighlight dd {
+  color: var(--vermilion);
+  font-weight: 700;
+}
+
+.methodLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.6rem;
+  border-bottom: 1px solid currentcolor;
+  color: var(--olive);
+  padding-bottom: 0.2rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: color 200ms var(--deck-ease), gap 200ms var(--deck-ease);
+}
+
+.methodLink:hover {
+  gap: 0.7rem;
+  color: var(--vermilion);
+}
+
+.methodSteps {
+  min-width: 0;
+}
+
+.methodStepsLabel {
+  margin: 0 0 1.1rem;
+  color: var(--gold);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.methodSteps ol {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.methodSteps li {
+  display: grid;
+  grid-template-columns: 4.25rem minmax(0, 1fr);
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  align-items: start;
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--surface);
+  padding: clamp(1rem, 2vw, 1.35rem) clamp(0.9rem, 2vw, 1.4rem);
+}
+
+.methodSteps li:first-child {
+  border-top: 1px solid var(--line-soft);
+}
+
+.stepNumber {
+  color: var(--vermilion);
+  font-family: var(--font-display), ui-serif, serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+  font-style: italic;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.stepText {
+  margin: 0;
+  font-size: clamp(0.9rem, 1.6vw, 1rem);
+  font-weight: 600;
+  line-height: 1.8;
+}
+
+.stepEnglish {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+}
+
+/* Specificity has to match `.methodSteps li` for the forest fill to win. */
+.methodSteps li.stepFinal {
+  border-color: transparent;
+  background: var(--olive);
+  color: var(--on-forest);
+}
+
+.stepFinal .stepNumber {
+  color: var(--gold-soft);
+}
+
+.stepFinal .stepEnglish {
+  color: var(--on-forest-muted);
+}
+
+/* --- 05 Ingredients ------------------------------------------------------ */
+
+.ingredientLayout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.ingredientFigure {
+  position: relative;
+  margin: 0;
+  border: 1px solid var(--line);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.ingredientFigure figcaption {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: color-mix(in srgb, var(--olive) 92%, transparent);
+  color: var(--on-forest);
+  padding: 0.7rem 1rem;
+  font-size: 0.72rem;
+  font-style: italic;
+  letter-spacing: 0.05em;
+}
+
+.ingredientBody {
+  min-width: 0;
+}
+
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0 0 clamp(1.5rem, 3vw, 2.1rem);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1.35rem;
+}
+
+.statRow dt {
+  color: var(--gold);
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.statRow dd {
+  display: flex;
+  align-items: baseline;
+  gap: 0.15rem;
+  margin: 0.35rem 0 0;
+  font-family: var(--font-display), ui-serif, serif;
+  line-height: 1;
+}
+
+.statRow dd span {
+  font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.statRow dd small {
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  font-weight: 500;
+}
+
+.ingredientListLabel {
+  margin: 0 0 0.9rem;
+  color: var(--gold);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.ingredientList {
+  margin: 0 0 1.4rem;
+  padding: 0;
+  list-style: none;
+}
+
+.ingredientList li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--line-soft);
+  padding: 0.7rem 0;
+  font-size: 0.92rem;
+}
+
+.swatch {
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  border: 1px solid rgb(28 25 23 / 18%);
+  border-radius: 999px;
+}
+
+.ingredientName {
+  flex: 1;
+  min-width: 0;
+}
+
+.ingredientAmount {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* --- Responsive ---------------------------------------------------------- */
+
+@media (max-width: 63.99rem) {
+  .theoryGrid,
+  .featureRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .theoryCardFeatured {
+    grid-column: span 2;
+  }
+
+  .featureRow li:last-child {
+    grid-column: span 2;
+  }
+
+  .chefLayout,
+  .souvenirLayout,
+  .methodLayout,
+  .ingredientLayout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .chefPortrait,
+  .souvenirPack {
+    max-width: 320px;
+  }
+}
+
+@media (max-width: 48rem) {
+  .theoryGrid,
+  .featureRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .theoryCardFeatured,
+  .featureRow li:last-child {
+    grid-column: auto;
+  }
+
+  .theoryQuote {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .statRow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+
+  .methodSteps li {
+    grid-template-columns: 3rem minmax(0, 1fr);
+  }
+
+  .chefPortrait,
+  .souvenirPack {
+    max-width: none;
+  }
+
+  .chefBio,
+  .timeline li,
+  .theoryCaption,
+  .theoryBody,
+  .souvenirText,
+  .featureRow li > p:last-child,
+  .equipmentList,
+  .quantityList > div,
+  .stepText,
+  .ingredientList li {
+    font-size: 0.9375rem;
+  }
+
+  .methodLink {
+    min-height: 44px;
+    align-items: center;
+    font-size: 0.875rem;
+  }
+}

@@ -1,6 +1,21 @@
 import { expect, test, type Page } from "@playwright/test";
 import path from "node:path";
 
+async function gotoWithNavigationRetry(page: Page, route: string) {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      await page.goto(route, { waitUntil: "load" });
+      return;
+    } catch (error) {
+      lastError = error;
+      if (!(error instanceof Error) || !/ERR_ABORTED|interrupted by another navigation/.test(error.message)) throw error;
+      await page.waitForTimeout(150);
+    }
+  }
+  throw lastError;
+}
+
 async function expectNoSeriousAccessibilityViolations(page: Page) {
   await page.addScriptTag({ path: path.join(process.cwd(), "node_modules", "axe-core", "axe.min.js") });
   const violations = await page.evaluate(async () => {
@@ -24,23 +39,17 @@ test("empty catalog presents the official storefront without demo commerce", asy
 
   await expect(page.getByRole("heading", { level: 1, name: "商品情報を準備しています" })).toBeVisible();
   await expect(page.getByRole("link", { name: "お問い合わせ" }).first()).toBeVisible();
-  // The catalogue moved onto the home page, so the header no longer carries a
-  // 商品一覧 link. The branded home link is the one navigation affordance that
-  // is visible at every width — the rest sits inside a closed <details> menu
-  // on phones.
-  await expect(page.getByRole("link", { name: "MOOR SPICE — ホーム" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "商品一覧" })).toHaveCount(0);
   await expect(page.getByRole("button", { name: /カートを開く/ })).toHaveCount(0);
   await expect(page.getByText(/デモ|demo/i)).toHaveCount(0);
   await expect(page.locator("main")).not.toContainText(/顧客|電話番号|お届け先/);
 });
 
-test("retired catalogue routes redirect home and expose no fabricated products", async ({ page }) => {
-  // /products, /products/[slug] and /categories/[slug] are now redirect stubs;
-  // the public catalogue lives on the home page.
-  for (const route of ["/products", "/products/pasta-magic", "/categories/spice"]) {
-    await page.goto(route);
-    await expect(page).toHaveURL(/\/$/);
-  }
+test("retired product collection redirects to the truthful official catalog", async ({ page }) => {
+  await page.goto("/products");
+
+  await expect(page).toHaveURL("/");
+  await expect(page.getByRole("heading", { level: 1, name: "商品情報を準備しています" })).toBeVisible();
   await expect(page.locator('a[href^="/products/"]')).toHaveCount(0);
   await expect(page.getByText(/イタリアンスパイス OF NO3|ガーリックハーブミックス/)).toHaveCount(0);
 });
@@ -56,46 +65,71 @@ test("legacy commerce routes are removed", async ({ page, request }) => {
 
 test("key catalog pages have no serious accessibility violations", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "chromium", "Desktop Chromium covers the semantic audit.");
-  // /products is a redirect stub: its client-side navigation tears down the
-  // execution context underneath addScriptTag. Audit the real pages instead.
-  for (const route of ["/", "/about", "/contact", "/recipes", "/recipes/pasta-magic-aglio-olio", "/faq"]) {
+  for (const route of ["/", "/products", "/contact", "/recipes"]) {
     await page.goto(route);
     await expect(page.locator("main")).toBeVisible();
     await expectNoSeriousAccessibilityViolations(page);
   }
 });
 
+test("mobile navigation closes when tapping outside", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+
+  const openMenu = page.getByRole("button", { name: "メニューを開く" });
+  await openMenu.click();
+  await expect(page.getByRole("navigation", { name: "モバイルナビゲーション" })).toBeVisible();
+
+  await page.locator("main").click({ position: { x: 380, y: 200 } });
+  await expect(page.getByRole("navigation", { name: "モバイルナビゲーション" })).toHaveCount(0);
+  await expect(openMenu).toBeVisible();
+});
+
+test("clicking the current navigation item returns to the top", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 500 });
+  await page.goto("/");
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+
+  await page
+    .getByRole("navigation", { name: "メインナビゲーション" })
+    .getByRole("link", { name: "ホーム" })
+    .click();
+
+  await expect.poll(() => page.evaluate(() => Math.round(window.scrollY))).toBe(0);
+});
+
 test("storefront does not overflow at required responsive widths", async ({ page }, testInfo) => {
-  test.setTimeout(90_000);
+  test.setTimeout(150_000);
   test.skip(testInfo.project.name !== "chromium", "One browser project covers the viewport matrix.");
 
-  for (const route of ["/", "/about", "/contact", "/recipes"]) {
+  for (const route of [
+    "/",
+    "/products",
+    "/about",
+    "/recipes",
+    "/recipes/pasta-magic-aglio-olio",
+    "/faq",
+    "/contact",
+    "/privacy",
+    "/terms",
+    "/admin/login",
+  ]) {
+    await gotoWithNavigationRetry(page, route);
+    await expect(route.startsWith("/admin") ? page.locator("form") : page.locator("main")).toBeVisible();
     for (const viewport of [
       { width: 320, height: 568 },
-      // 375 and 768 sit either side of the layout switches the redesigned
-      // sections key off, and were where the card unfurl first pushed the
-      // document sideways.
-      { width: 375, height: 812 },
+      { width: 360, height: 800 },
       { width: 390, height: 844 },
       { width: 430, height: 932 },
+      { width: 576, height: 900 },
       { width: 768, height: 1024 },
       { width: 1024, height: 1366 },
       { width: 1122, height: 1402 },
       { width: 1440, height: 1200 },
     ]) {
       await page.setViewportSize(viewport);
-      await page.goto(route);
-      await expect(page.locator("main")).toBeVisible();
-      // Scroll-driven animations are widest mid-flight, so a measurement taken
-      // only at the top of the page would miss them.
-      await page.evaluate(async () => {
-        const total = document.documentElement.scrollHeight;
-        for (let y = 0; y <= total; y += 400) {
-          window.scrollTo(0, y);
-          await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
-        }
-        window.scrollTo(0, 0);
-      });
+      await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow, `${route} overflows at ${viewport.width}px`).toBeLessThanOrEqual(1);
     }

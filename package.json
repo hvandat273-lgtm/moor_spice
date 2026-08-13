@@ -13,7 +13,6 @@
     "test:unit": "vitest run tests/unit",
     "test:integration": "vitest run tests/integration",
     "test:e2e": "playwright test",
-    "test:e2e:responsive": "playwright test --config=playwright.responsive.config.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:reset:test": "tsx scripts/reset-test-database.ts",
@@ -23,8 +22,7 @@
     "admin:hash-password": "tsx scripts/hash-admin-password.ts",
     "catalog:export": "tsx scripts/catalog-transfer.ts export",
     "catalog:import": "tsx scripts/catalog-transfer.ts import",
-    "catalog:apply-pasta-magic": "tsx scripts/apply-pasta-magic-content.ts",
-    "art:build": "tsx scripts/build-product-art.ts"
+    "catalog:apply-pasta-magic": "tsx scripts/apply-pasta-magic-content.ts"
   },
   "engines": {
     "node": ">=20.11.0"

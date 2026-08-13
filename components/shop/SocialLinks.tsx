@@ -1,7 +1,3 @@
-"use client";
-
-import { useT } from "@/lib/i18n/LocaleProvider";
-
 interface SocialLinksProps {
   facebookUrl?: string;
   instagramUrl?: string;
@@ -27,7 +23,7 @@ function InstagramMark() {
 
 function AmazonMark() {
   return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" role="img">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
       <text x="4.3" y="16.5" fill="currentColor" fontFamily="Arial, sans-serif" fontSize="15" fontWeight="700">a</text>
       <path d="M5.4 18c3.6 2.1 8.7 2.3 13.1.4" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.7" />
       <path d="m16.9 17.3 1.8 1.1-1.5 1.3" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.4" />
@@ -36,7 +32,6 @@ function AmazonMark() {
 }
 
 export function SocialLinks({ facebookUrl, instagramUrl, amazonUrl, tone = "light" }: SocialLinksProps) {
-  const t = useT();
   const links = [
     { href: facebookUrl, label: "Facebook", mark: <FacebookMark /> },
     { href: instagramUrl, label: "Instagram", mark: <InstagramMark /> },
@@ -44,11 +39,11 @@ export function SocialLinks({ facebookUrl, instagramUrl, amazonUrl, tone = "ligh
   ];
 
   return (
-    <div aria-label={t("social.label")} className={`social-links social-links--${tone}`} role="group">
+    <div aria-label="ソーシャルメディア" className={`social-links social-links--${tone}`} role="group">
       {links.map((link) => (
         link.href ? (
           <a
-            aria-label={t("social.follow", { network: link.label })}
+            aria-label={`${link.label}でMOOR SPICEをフォロー`}
             href={link.href}
             key={link.label}
             rel="noopener noreferrer"
@@ -60,7 +55,7 @@ export function SocialLinks({ facebookUrl, instagramUrl, amazonUrl, tone = "ligh
           <span
             className="social-links__inactive"
             key={link.label}
-            title={t("social.pending", { network: link.label })}
+            title={`${link.label}は準備中です`}
           >
             {link.mark}
           </span>

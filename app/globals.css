@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./motion.css";
 
 .social-links {
   display: flex;
@@ -29,19 +28,23 @@
 }
 
 .social-links--light a,
-.social-links--light > span,
-.social-links--dark a,
-.social-links--dark > span {
-  border-color: rgb(255 255 255 / 18%);
-  background: rgb(255 255 255 / 6%);
-  color: #f4f1e8;
+.social-links--light > span {
+  border-color: rgb(255 253 248 / 28%);
+  background: rgb(255 253 248 / 78%);
+  color: #30351e;
 }
 
-.social-links--light a:hover,
-.social-links--dark a:hover {
-  border-color: rgb(217 182 117 / 60%);
-  background: rgb(217 182 117 / 14%);
-  color: #d9b675;
+.social-links--light a:hover {
+  border-color: #fffdf8;
+  background: #fffdf8;
+  color: #8f201c;
+}
+
+.social-links--dark a,
+.social-links--dark > span {
+  border-color: #cfc2ad;
+  background: #f1eadc;
+  color: #30351e;
 }
 
 .social-links .social-links__inactive {
@@ -49,8 +52,14 @@
   opacity: 0.58;
 }
 
+.social-links--dark a:hover {
+  border-color: #4b512b;
+  background: #4b512b;
+  color: #fffdf8;
+}
+
 .social-links a:focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid #b7904c;
   outline-offset: 3px;
 }
 
@@ -60,146 +69,40 @@
   }
 }
 
-/* ---------------------------------------------------------------------------
- * Design system — one theme layer.
- *
- * Everything downstream reads semantic tokens, never a literal colour. The
- * scrims over photographs and the hairlines on cards are derived with
- * `color-mix(... , transparent)` from those same tokens, so they follow the
- * theme instead of having to be rewritten one by one — which is what the
- * first dark-only pass forced, and what made this repaint a 45-line sweep
- * rather than a one-line change.
- *
- * Changing the whole site's palette now means editing only the block marked
- * THEME below. Nothing outside it names a colour.
- *
- * Every text/background pair is measured at >= 4.5:1 (WCAG AA).
- * ------------------------------------------------------------------------ */
+/*
+ * Design system — "Operation Factory" editorial deck.
+ * Derived from the Pasta Magic Powder product deck: forest-green rules and
+ * panels, a vermilion hairline under every section subtitle, gold numerals,
+ * warm paper canvas, Noto Serif JP headlines over Noto Sans JP body.
+ * Every text/background pair below is checked at >= 4.5:1 (WCAG AA).
+ */
 :root {
-  /* --- THEME ------------------------------------------------------------
-   *
-   * Deep forest. Every surface below is a step on one green ladder, and the
-   * whole thing is tuned around a single brand hue — change --brand-green and
-   * pick new ladder steps from it, and the site follows.
-   *
-   * Measured against #101E14 / #16291B / #1D3624:
-   *   fg        15.1 / 13.4 / 11.4
-   *   fg-muted   9.5 /  8.4 /  7.2
-   *   accent     6.4 /  5.7 /  4.9   (#EC8064 — #E2694A fell to 3.96 on the
-   *                                   raised surface, under AA for body text)
-   *   accent-2   9.0 /  8.0 /  6.8
-   * -------------------------------------------------------------------- */
-
-  /* The brand green itself, used as a fill behind light text (7.3:1 with
-   * white), never as text on the page ground — it only reaches 2.4:1 there. */
-  --brand-green: #35603c;
-
-  /* Surfaces, deepest ground to highest card. */
-  --bg: #101e14;
-  --bg-soft: #16291b;
-  --bg-raised: #1d3624;
-  --bg-sunken: #0a150d;
-
-  /* Text. */
-  --fg: #f1f0e6;
-  --fg-muted: #b6c4b4;
-
-  /* Accents. */
-  --accent: #ec8064;
-  --accent-2: #d9b675;
-
-  /* Fills that carry white text. Burgundy is the CTA; olive-light is a lifted
-   * step of the brand green. Neither is ever used as text. */
-  --burgundy: #a3231d;
+  --canvas: #faf8f3;
+  --surface: #fffdf8;
+  --surface-muted: #f2ece0;
+  --ink: #1c1917;
+  --muted: #5a5449;
+  --olive: #2e4636; /* deck forest green — 9.67:1 on canvas */
+  --olive-light: #3c5b48;
+  --olive-deep: #1e2f24;
+  --burgundy: #a3231d; /* 7.03:1 on canvas */
   --burgundy-dark: #7f1a15;
-  --olive-light: #3f6f47;
-  --success: #8fcf8b;
-
-  /* Shadow tint: a deep green-black, so shadows on green surfaces read as
-   * shade rather than as grey grime. */
-  --shadow-rgb: 4 12 7;
-  --shadow-a1: 34%;
-  --shadow-a2: 48%;
-  --shadow-a3: 64%;
-
-  /* --- END THEME --------------------------------------------------------- */
-
-  --hairline: color-mix(in srgb, var(--fg) 12%, transparent);
-  --hairline-strong: color-mix(in srgb, var(--fg) 22%, transparent);
-
-  /* Back-compatible names. Several hundred declarations across the chapter and
-   * page stylesheets already read these; repointing them here is one line each,
-   * where renaming would be a sweep across every file for nothing. */
-  --canvas: var(--bg);
-  --surface: var(--bg-soft);
-  --surface-muted: var(--bg-raised);
-  --ink: var(--fg);
-  --muted: var(--fg-muted);
-  --line: var(--hairline-strong);
-  --line-soft: var(--hairline);
-  --night: var(--bg);
-  --night-soft: var(--bg-soft);
-  --night-elevated: var(--bg-raised);
-  --night-raised: var(--bg-sunken);
-  --on-night: var(--fg);
-  --on-night-muted: var(--fg-muted);
-  --hairline-night: var(--hairline);
-  --vermilion: var(--accent);
-  --gold: var(--accent-2);
-  --gold-soft: var(--accent-2);
-  --vermilion-on-night: var(--accent);
-  --gold-on-night: var(--accent-2);
-
-  /* Olive now points at the brand green so the panels and the page ground are
-   * one family; they used to be two unrelated greens side by side. */
-  --olive: var(--brand-green);
-  --olive-deep: var(--bg-sunken);
-  --on-forest: var(--fg);
-  --on-forest-muted: var(--fg-muted);
-
-  --danger: var(--accent);
+  --vermilion: #b3341f; /* deck rule + italic subtitle — 5.77:1 on canvas */
+  --gold: #a16207; /* 4.64:1 on canvas */
+  --gold-soft: #d9b675; /* 5.33:1 on forest */
+  --on-forest: #f4f1e8;
+  --on-forest-muted: #cfd6cb; /* 6.91:1 on forest */
+  --line: #d3c7b2;
+  --line-soft: #e6ddcb;
+  --danger: #a3231d;
+  --success: #365b35;
   --radius-sm: 0.4rem;
   --radius-md: 0.75rem;
   --radius-lg: 1.1rem;
-  --shadow-soft: 0 18px 50px rgb(var(--shadow-rgb) / var(--shadow-a2));
-  --shadow-card: 0 10px 30px rgb(var(--shadow-rgb) / var(--shadow-a1));
+  --shadow-soft: 0 18px 50px rgb(54 43 26 / 9%);
+  --shadow-card: 0 10px 30px rgb(54 43 26 / 7%);
   --container: 75rem;
-  /* Shared horizontal rhythm for the storefront chrome and hero. The value is
-   * the total space removed from both sides, so it yields 16px gutters at the
-   * 320px floor and grows smoothly until the 1280px shell is reached. */
-  --shell-max: 80rem;
-  --shell-inline-space: clamp(2rem, 8vw, 8rem);
   --deck-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
-
-  /* Depth ladder for the 3D layers. */
-  --depth-near: 0 2px 6px rgb(var(--shadow-rgb) / var(--shadow-a1));
-  --depth-mid: 0 14px 34px -8px rgb(var(--shadow-rgb) / var(--shadow-a2));
-  --depth-far: 0 40px 90px -20px rgb(var(--shadow-rgb) / var(--shadow-a3));
-
-  /* Accent halos. On paper these are a soft tint, not the bloom a dark stage
-   * can carry — a strong glow on a light ground just looks like a smudge. */
-  --glow-vermilion: 0 0 34px -12px color-mix(in srgb, var(--accent) 34%, transparent);
-  --glow-gold: 0 0 30px -12px color-mix(in srgb, var(--accent-2) 30%, transparent);
-
-  /* Motion — expo.out for entrances, 150-300ms for micro-interactions. */
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-quad: cubic-bezier(0.55, 0.09, 0.68, 0.53);
-  --dur-fast: 180ms;
-  --dur-base: 240ms;
-  --dur-slow: 300ms;
-
-  /* Bento cards. */
-  --card-radius: 20px;
-  --bento-gap: 20px;
-
-  /* Fluid type scale. --step-6 is the hero wordmark. */
-  --step-0: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
-  --step-1: clamp(1.1rem, 1rem + 0.45vw, 1.35rem);
-  --step-2: clamp(1.35rem, 1.15rem + 0.9vw, 1.85rem);
-  --step-3: clamp(1.7rem, 1.35rem + 1.6vw, 2.6rem);
-  --step-4: clamp(2.1rem, 1.5rem + 2.7vw, 3.6rem);
-  --step-5: clamp(2.6rem, 1.7rem + 4.2vw, 5rem);
-  --step-6: clamp(3.25rem, 1.9rem + 6.4vw, 7.5rem);
 }
 
 * {
@@ -212,10 +115,11 @@ html {
 }
 
 body {
-  min-width: 320px;
+  width: 100%;
+  min-width: 0;
   margin: 0;
   background:
-    radial-gradient(circle at 5% 35%, color-mix(in srgb, var(--accent-2) 4%, transparent), transparent 24rem),
+    radial-gradient(circle at 5% 35%, rgb(177 138 69 / 5%), transparent 24rem),
     var(--canvas);
   color: var(--ink);
   font-family: var(--font-sans), "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", ui-sans-serif, system-ui, sans-serif;
@@ -223,26 +127,27 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Note on the admin panel: the root layout wraps `/admin/*` too, so it sits on
- * this dark body. No override is needed — both `AdminShell` and the login page
- * are `fixed inset-0` with their own light background at a z-index above the
- * storefront header, so they cover the viewport completely. */
+main,
+header,
+footer,
+section,
+article,
+aside,
+nav,
+div {
+  min-width: 0;
+}
+
+:where(h1, h2, h3, p, li, dt, dd, a, span) {
+  overflow-wrap: anywhere;
+}
 
 body:has([data-lock-scroll="true"]) {
   overflow: hidden;
 }
 
-/* Publishes each chapter's view timeline by name so the fixed chapter rail —
- * which is not a DOM relative of any chapter — can animate against them.
- * Declared on body because `timeline-scope` has to sit on a common ancestor. */
-@supports (timeline-scope: --ch-1) {
-  body {
-    timeline-scope: --ch-1, --ch-2, --ch-3, --ch-4, --ch-5, --ch-6;
-  }
-}
-
 ::selection {
-  background: color-mix(in srgb, var(--accent) 32%, transparent);
+  background: rgb(143 32 28 / 18%);
 }
 
 a {
@@ -260,6 +165,7 @@ textarea {
 button,
 a {
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 button:not(:disabled),
@@ -273,7 +179,7 @@ svg {
 }
 
 :focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--accent-2) 80%, transparent);
+  outline: 3px solid rgb(177 138 69 / 65%);
   outline-offset: 3px;
 }
 
@@ -287,8 +193,7 @@ svg {
 }
 
 .eyebrow {
-  /* Burgundy is a fill, not a text colour: it reads 2.5:1 on the ground. */
-  color: var(--vermilion);
+  color: var(--burgundy);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.22em;
@@ -310,56 +215,111 @@ svg {
 }
 
 /* ---------------------------------------------------------------------------
- * Chapter primitives.
- *
- * What used to live here was the "editorial deck" header language: a 3px olive
- * rule, a numbered kicker, a page counter, a serif title and an italic
- * vermilion subtitle, repeated verbatim above all six chapters. It has been
- * removed. Each chapter now owns its composition, and the chapter numbers live
- * in the fixed rail instead of being restated six times.
- *
- * `.chapter` is the only survivor, and it is layout with no visual language:
- * a full-viewport stage with a centred content column.
- * ------------------------------------------------------------------------ */
+ * Deck primitives — the section header language lifted from the product deck:
+ * a forest hairline band, a numbered kicker with the page counter opposite,
+ * a serif headline, and an italic subtitle underscored in vermilion.
+ * ------------------------------------------------------------------------- */
 
-.chapter {
-  position: relative;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: clip;
-  isolation: isolate;
-  /* Top padding clears the sticky header. Centring the content in the full
-     viewport without it tucks every chapter's first line under the masthead. */
-  padding-block: clamp(7.5rem, 14vh, 10rem) clamp(4rem, 9vh, 7rem);
-  /* Anchor jumps (#ingredients from the hero, /#ingredients from the footer)
-     land below the header rather than behind it. */
-  scroll-margin-top: 6rem;
-}
-
-/* Inner column. Chapters that bleed imagery to the viewport edge put only
- * their text inside this. */
-.chapter-inner {
-  position: relative;
-  width: min(calc(100% - clamp(1.5rem, 5vw, 4rem)), var(--container));
+.deck-section {
+  width: min(calc(100% - 2rem), var(--container));
   margin-inline: auto;
+  padding-block: clamp(3.25rem, 7vw, 5.5rem);
 }
 
-/* Small print under a chapter — sources, disclaimers, tips. */
-.chapter-note {
+.deck-head {
+  margin-bottom: clamp(2rem, 4vw, 3.25rem);
+}
+
+.deck-rule {
+  height: 3px;
+  background: var(--olive);
+}
+
+.deck-rule + .deck-rule-thin {
+  height: 1px;
+  margin-top: 2px;
+  background: color-mix(in srgb, var(--olive) 34%, transparent);
+}
+
+.deck-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.15rem;
+}
+
+.deck-kicker {
+  color: var(--gold);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.deck-page {
+  flex: none;
+  color: var(--gold);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  font-variant-numeric: tabular-nums;
+}
+
+.deck-title {
+  max-width: 34ch;
+  margin: 0.7rem 0 0;
+  font-family: var(--font-display), "Noto Serif JP", "Yu Mincho", ui-serif, serif;
+  font-size: clamp(1.85rem, 4.2vw, 3.1rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  /* Keep Japanese line breaks off small kana and prolonged sound marks. */
+  line-break: strict;
+  line-height: 1.22;
+  text-wrap: balance;
+}
+
+.deck-sub {
+  position: relative;
+  max-width: 46ch;
+  margin: 0.85rem 0 0;
+  padding-bottom: 1.4rem;
+  color: var(--vermilion);
+  font-size: clamp(0.9rem, 1.5vw, 1.02rem);
+  font-style: italic;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+
+.deck-sub::after {
+  position: absolute;
+  bottom: 0.55rem;
+  left: 0;
+  width: 2.75rem;
+  height: 2px;
+  background: var(--vermilion);
+  content: "";
+}
+
+.deck-note {
   max-width: 62ch;
-  margin: 0;
-  color: var(--on-night-muted);
+  margin: 0.15rem 0 0;
+  color: var(--muted);
   font-size: 0.76rem;
   line-height: 1.75;
 }
 
-/* Chapters are tall; on a short viewport let them size to content instead of
- * forcing a scroll past empty space. */
-@media (max-height: 34rem) {
-  .chapter {
-    min-height: 0;
+/* Dark forest panel used for pull quotes and the proposal strip. */
+.deck-panel {
+  border-left: 3px solid var(--gold-soft);
+  background: var(--olive);
+  color: var(--on-forest);
+}
+
+@media (max-width: 48rem) {
+  .deck-section {
+    width: min(calc(100% - 1.25rem), var(--container));
   }
 }
 
@@ -385,7 +345,7 @@ svg {
   border: 1px solid var(--burgundy);
   background: var(--burgundy);
   color: #fff;
-  box-shadow: 0 0 40px -12px color-mix(in srgb, var(--accent) 55%, transparent), 0 9px 24px rgb(var(--shadow-rgb) / 14%);
+  box-shadow: 0 9px 24px rgb(143 32 28 / 17%);
 }
 
 .button-primary:hover:not(:disabled) {
@@ -400,7 +360,7 @@ svg {
 }
 
 .button-secondary:hover:not(:disabled) {
-  background: var(--olive-light);
+  background: #3c4322;
   transform: translateY(-1px);
 }
 
@@ -411,8 +371,8 @@ svg {
 }
 
 .button-ghost:hover:not(:disabled) {
-  border-color: var(--gold);
-  color: var(--gold);
+  border-color: var(--olive);
+  color: var(--olive);
 }
 
 .button-primary:disabled,
@@ -425,7 +385,7 @@ svg {
 .field-label {
   display: grid;
   gap: 0.45rem;
-  color: var(--on-night);
+  color: #403c33;
   font-size: 0.86rem;
   font-weight: 650;
 }
@@ -442,12 +402,12 @@ svg {
 }
 
 .field-input:hover {
-  border-color: color-mix(in srgb, var(--fg) 22%, transparent);
+  border-color: #c6b99f;
 }
 
 .field-input:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-2) 22%, transparent);
+  border-color: var(--olive-light);
+  box-shadow: 0 0 0 3px rgb(95 101 53 / 11%);
   outline: none;
 }
 
@@ -460,7 +420,7 @@ svg {
 .surface-card {
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: var(--night-soft);
+  background: rgb(255 253 248 / 88%);
   box-shadow: var(--shadow-card);
 }
 
@@ -470,12 +430,9 @@ svg {
   top: 0.75rem;
   left: 0.75rem;
   transform: translateY(-180%);
-  border: 1px solid var(--gold);
   border-radius: 0.35rem;
-  /* --ink is now near-white, so the paper-era "dark chip" would be an
-   * invisible white-on-white pill. */
-  background: var(--night);
-  color: var(--on-night);
+  background: var(--ink);
+  color: #fff;
   padding: 0.65rem 1rem;
 }
 
@@ -495,7 +452,7 @@ svg {
   border: 0;
 }
 
-@media (max-width: 47.99rem) {
+@media (max-width: 48rem) {
   .site-container {
     width: min(calc(100% - 1.25rem), var(--container));
   }
@@ -503,8 +460,31 @@ svg {
   .button-primary,
   .button-secondary,
   .button-ghost {
-    min-height: 2.85rem;
+    min-height: 3rem;
     padding-inline: 1rem;
+  }
+
+  .deck-section {
+    padding-block: clamp(2.75rem, 10vw, 4rem);
+  }
+
+  .deck-title {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+  }
+
+  .deck-sub,
+  .deck-note {
+    font-size: 0.9375rem;
+  }
+
+  button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) {
+    min-height: 44px;
+    font-size: 1rem;
   }
 }
 
@@ -521,194 +501,4 @@ svg {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
-}
-
-
-/* ---------------------------------------------------------------------------
- * Buttons and links.
- *
- * Global rather than module-scoped: the hero, the chapters and four
- * standalone pages all use them, and CSS-module scoping meant every new
- * stylesheet had to redeclare them. Names are kebab-case to match the other
- * global primitives (.eyebrow, .sr-only, .chapter).
- * ------------------------------------------------------------------------ */
-
-.btn-primary,
-.btn-outline {
-  min-height: 48px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.65rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  line-height: 1.2;
-  text-transform: uppercase;
-  transition:
-    transform var(--dur-base) var(--ease-out-expo),
-    box-shadow var(--dur-base) var(--ease-out-expo),
-    background var(--dur-base) var(--ease-out-expo);
-}
-
-.btn-primary {
-  position: relative;
-  min-width: 230px;
-  overflow: hidden;
-  isolation: isolate;
-  border: 1px solid var(--burgundy);
-  background: var(--burgundy);
-  color: #fff;
-  padding: 0.85rem 1.7rem;
-  box-shadow: 0 0 34px -12px color-mix(in srgb, var(--accent) 55%, transparent), 0 10px 25px rgb(var(--shadow-rgb) / var(--shadow-a2));
-}
-
-/* A darker face wipes across from the left instead of the whole button
- * changing colour at once. */
-.btn-primary::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  transform: scaleX(0);
-  transform-origin: left center;
-  background: var(--burgundy-dark);
-  transition: transform var(--dur-slow) var(--ease-out-expo);
-}
-
-/* A narrow reflection crosses the CTA on intent. The layer only transforms,
- * so the pill never shifts and the highlight causes no layout work. */
-.btn-primary::after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  inset: -35% auto -35% -42%;
-  width: 24%;
-  pointer-events: none;
-  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 24%), transparent);
-  transform: skewX(-18deg) translateX(0);
-  transition: transform 480ms var(--ease-out-expo);
-}
-
-.btn-primary:hover:not(:disabled)::before,
-.btn-primary:focus-visible::before {
-  transform: scaleX(1);
-}
-
-.btn-primary:hover:not(:disabled)::after,
-.btn-primary:focus-visible::after {
-  transform: skewX(-18deg) translateX(690%);
-}
-
-.btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 0 44px -10px color-mix(in srgb, var(--accent) 65%, transparent), 0 16px 34px rgb(var(--shadow-rgb) / var(--shadow-a3));
-}
-
-.btn-primary:disabled {
-  cursor: not-allowed;
-  opacity: 0.48;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .btn-primary::after {
-    display: none;
-  }
-}
-
-.text-link,
-.card-link {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  cursor: pointer;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  transition: color var(--dur-fast) var(--ease-out-expo);
-}
-
-.text-link::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: -0.4rem;
-  left: 0;
-  height: 1px;
-  transform: scaleX(0);
-  transform-origin: left center;
-  background: currentcolor;
-  transition: transform var(--dur-base) var(--ease-out-expo);
-}
-
-.text-link:hover,
-.text-link:focus-visible {
-  color: var(--vermilion);
-}
-
-.text-link:hover::after,
-.text-link:focus-visible::after {
-  transform: scaleX(1);
-}
-
-.text-link svg,
-.card-link svg {
-  transition: transform var(--dur-fast) var(--ease-out-expo);
-}
-
-.text-link:hover svg,
-.card-link:hover svg {
-  transform: translateX(4px);
-}
-
-/* A link has to declare its own colour. Inheriting left it at whatever the
- * surrounding card happened to set, which measured 1.5:1 on the recipe cards
- * — invisible in practice, and an axe failure. */
-.card-link {
-  width: fit-content;
-  min-height: 38px;
-  border-bottom: 1px solid currentcolor;
-  border-radius: 0;
-  color: var(--gold);
-  padding: 0.4rem 0 0.2rem;
-}
-
-.card-link:hover,
-.card-link:focus-visible {
-  color: var(--vermilion);
-}
-
-.section-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  margin-top: clamp(1.25rem, 2.5vw, 1.8rem);
-  border-bottom: 1px solid currentcolor;
-  color: var(--olive);
-  padding-bottom: 0.2rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  transition: color 200ms var(--deck-ease), gap 200ms var(--deck-ease);
-}
-
-.section-link:hover {
-  gap: 0.75rem;
-  color: var(--vermilion);
-}
-
-.btn-outline {
-  border: 1px solid var(--ink);
-  background: transparent;
-  padding: 0.8rem 1.5rem;
-}
-
-.btn-outline:hover {
-  background: var(--ink);
-  color: #fff;
 }

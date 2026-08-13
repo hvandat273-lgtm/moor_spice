@@ -47,7 +47,7 @@ export function LoginForm() {
         <span className="relative block">
           <LockKeyhole size={17} className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#8c8578]" />
           <input name="password" type={showPassword ? "text" : "password"} autoComplete="current-password" required minLength={1} maxLength={72} aria-describedby="admin-password-requirement" className="min-h-12 w-full rounded-xl border border-[#ded5c4] bg-white pr-12 pl-10 text-sm outline-none transition focus:border-[#5f6535] focus:ring-3 focus:ring-[#5f6535]/10" placeholder="••••••••••••" />
-          <button type="button" aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"} onClick={() => setShowPassword((value) => !value)} className="absolute top-1/2 right-2.5 grid size-9 -translate-y-1/2 place-items-center rounded-lg text-[#777064] hover:bg-[#f2eee5]">
+          <button type="button" aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"} onClick={() => setShowPassword((value) => !value)} className="absolute top-1/2 right-1 grid size-11 -translate-y-1/2 place-items-center rounded-lg text-[#777064] hover:bg-[#f2eee5]">
             {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
           </button>
         </span>
