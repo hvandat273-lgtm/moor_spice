@@ -49,6 +49,10 @@ export async function GET(request: Request) {
     await authorize(request);
     await enforceRateLimit({ action: "readiness-ip", key: clientIpFrom(request), limit: 10, windowSeconds: 60 });
     const backend = requireConfiguredCatalogBackend();
+    if (backend === "bundled-json") {
+      const catalog = await readCatalogDocument({ fresh: true });
+      return apiSuccess({ status: "ready", backend, mode: "read-only", revision: catalog.revision }, requestId);
+    }
     if (backend === "local-json" || backend === "vercel-blob") {
       // This also validates the dedicated private catalog token for Blob-backed
       // catalogs and all stateless administrator credentials.

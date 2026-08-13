@@ -5,6 +5,7 @@ import { ArrowLeft, ChevronRight, Clock3, Users } from "lucide-react";
 import { notFound } from "next/navigation";
 
 import styles from "@/components/shop/storefront.module.css";
+import { getPublicSiteUrl } from "@/lib/server/env";
 
 import { recipes } from "../data";
 
@@ -33,7 +34,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailProps) {
   const recipe = recipes.find((item) => item.slug === slug);
   if (!recipe) notFound();
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = getPublicSiteUrl();
   const recipeJsonLd = {
     "@context": "https://schema.org",
     "@type": "Recipe",

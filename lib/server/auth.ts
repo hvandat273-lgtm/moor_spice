@@ -133,9 +133,12 @@ export function getAdminAuthenticationConfigurationIssue(): string | null {
   try {
     backend = getCatalogBackend();
   } catch {
-    return "CATALOG_BACKEND không hợp lệ. Hãy dùng local-json, vercel-blob hoặc postgres.";
+    return "CATALOG_BACKEND không hợp lệ. Hãy dùng bundled-json, local-json, vercel-blob hoặc postgres.";
   }
   if (!backend) return "Chưa cấu hình nguồn dữ liệu. Hãy đặt CATALOG_BACKEND trước khi đăng nhập quản trị.";
+  if (backend === "bundled-json") {
+    return "Catalog đóng gói chỉ đọc. Hãy đặt CATALOG_BACKEND=vercel-blob và cấu hình Blob để dùng trang quản trị.";
+  }
   if (backend === "postgres") {
     return hasDatabaseUrl() ? null : "CATALOG_BACKEND=postgres cần DATABASE_URL.";
   }

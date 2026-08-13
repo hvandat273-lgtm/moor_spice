@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { getCatalogBackend, isCommerceEnabled, isSiteIndexingEnabled } from "@/lib/server/env";
+import { getCatalogBackend, getPublicSiteUrl, isCommerceEnabled, isSiteIndexingEnabled } from "@/lib/server/env";
 
 describe("catalog capabilities", () => {
   afterEach(() => vi.unstubAllEnvs());
@@ -14,12 +14,12 @@ describe("catalog capabilities", () => {
     expect(getCatalogBackend()).toBe("local-json");
   });
 
-  it("fails closed on Vercel when the catalog backend is missing", () => {
+  it("uses the read-only bundled catalogue on Vercel when storage is not configured", () => {
     vi.stubEnv("VERCEL", "1");
     vi.stubEnv("DEPLOYMENT_MODE", "catalog");
     delete process.env.CATALOG_BACKEND;
     delete process.env.DATABASE_URL;
-    expect(getCatalogBackend()).toBeNull();
+    expect(getCatalogBackend()).toBe("bundled-json");
   });
 
   it("never enables commerce for a JSON catalog", () => {
@@ -43,5 +43,11 @@ describe("catalog capabilities", () => {
     expect(isSiteIndexingEnabled()).toBe(false);
     vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://moor-spice.example");
     expect(isSiteIndexingEnabled()).toBe(true);
+  });
+
+  it("derives the public URL from Vercel when no custom URL is configured", () => {
+    vi.stubEnv("VERCEL_PROJECT_PRODUCTION_URL", "moon-spice.example");
+    delete process.env.NEXT_PUBLIC_SITE_URL;
+    expect(getPublicSiteUrl().origin).toBe("https://moon-spice.example");
   });
 });

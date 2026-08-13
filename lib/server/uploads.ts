@@ -167,16 +167,16 @@ export async function uploadImage(file: File, options: { scope?: string } = {}):
   }
 
   if (process.env.NODE_ENV === "production" && process.env.RENDER && process.env.UPLOADS_PATH?.trim()) {
-    const persistentRoot = path.resolve(process.env.UPLOADS_PATH?.trim() || "/var/data/uploads");
-    const uploadDirectory = path.join(persistentRoot, scope);
-    await mkdir(uploadDirectory, { recursive: true });
-    await writeFile(path.join(uploadDirectory, filename), output.data, { flag: "wx" });
+    const persistentRoot = path.resolve(/*turbopackIgnore: true*/ process.env.UPLOADS_PATH?.trim() || "/var/data/uploads");
+    const uploadDirectory = path.join(/*turbopackIgnore: true*/ persistentRoot, scope);
+    await mkdir(/*turbopackIgnore: true*/ uploadDirectory, { recursive: true });
+    await writeFile(/*turbopackIgnore: true*/ path.join(uploadDirectory, filename), output.data, { flag: "wx" });
     return { url: `/api/media/${scope}/${filename}`, pathname: null, storageProvider: "LOCAL", width: output.info.width, height: output.info.height, contentType: "image/webp", size: output.info.size };
   }
   if (process.env.NODE_ENV === "production") throw new AppError(503, "STORAGE_UNAVAILABLE", "Local storage không được dùng trên production");
-  const uploadDirectory = path.resolve(process.cwd(), "public", "uploads", scope);
-  await mkdir(uploadDirectory, { recursive: true });
-  await writeFile(path.join(uploadDirectory, filename), output.data, { flag: "wx" });
+  const uploadDirectory = path.resolve(/*turbopackIgnore: true*/ process.cwd(), "public", "uploads", scope);
+  await mkdir(/*turbopackIgnore: true*/ uploadDirectory, { recursive: true });
+  await writeFile(/*turbopackIgnore: true*/ path.join(uploadDirectory, filename), output.data, { flag: "wx" });
   return {
     url: `/uploads/${scope}/${filename}`,
     pathname: null,

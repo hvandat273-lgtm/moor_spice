@@ -55,6 +55,38 @@ Thiết lập các biến Secret trên Render:
 
 Không cần PostgreSQL, SQLite, Docker, `DATABASE_URL`, hay biến thanh toán/đơn hàng.
 
+## Deploy lên Vercel
+
+Dự án dùng preset Next.js và Node.js 24.x. Khi import repository vào Vercel, giữ nguyên các thiết lập tự nhận diện:
+
+- Framework Preset: `Next.js`
+- Build Command: `npm run build`
+- Install Command: `npm install`
+- Output Directory: để trống để Vercel dùng output chuẩn của Next.js
+
+Lần deploy đầu tiên không cần secret: nếu `CATALOG_BACKEND` chưa được đặt, website dùng `data/showcase-catalog.json` ở chế độ chỉ đọc. URL metadata tự lấy từ `VERCEL_PROJECT_PRODUCTION_URL`, nên không cần đặt `NEXT_PUBLIC_SITE_URL` trừ khi muốn ép một custom domain khác.
+
+Để bật đăng nhập Admin, chỉnh catalog và tải ảnh trên Vercel, tạo hai Blob store riêng rồi thêm các biến sau cho cả Production và Preview:
+
+```dotenv
+CATALOG_BACKEND=vercel-blob
+CATALOG_BLOB_READ_WRITE_TOKEN=<token của PRIVATE Blob store>
+STORAGE_ADAPTER=vercel-blob
+BLOB_READ_WRITE_TOKEN=<token của PUBLIC Blob store ảnh>
+ADMIN_EMAIL=owner@example.com
+ADMIN_PASSWORD_HASH=$2b$12$...
+ADMIN_DISPLAY_NAME=Catalog Administrator
+ADMIN_SESSION_VERSION=1
+SESSION_SECRET=<chuỗi ngẫu nhiên tối thiểu 32 byte>
+RATE_LIMIT_SECRET=<chuỗi ngẫu nhiên tối thiểu 32 byte>
+DEPLOYMENT_MODE=catalog
+SITE_INDEXING_ENABLED=false
+```
+
+Không đặt `CATALOG_BACKEND=local-json` hoặc `STORAGE_ADAPTER=local` trên Vercel vì filesystem của Function không phải nơi lưu dữ liệu bền vững. Chỉ đổi `SITE_INDEXING_ENABLED=true` sau khi domain HTTPS chính thức đã sẵn sàng.
+
+Sau khi kết nối Blob, có thể nạp catalog mẫu một lần từ máy local bằng `npm run catalog:import -- data/showcase-catalog.json --confirm` với các token Vercel đã được kéo về `.env.local`.
+
 ## Dữ liệu và ảnh
 
 - `CATALOG_BACKEND=local-json` dùng JSON file, phù hợp local và Render có disk.

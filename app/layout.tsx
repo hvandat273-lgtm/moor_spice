@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
 import { StorefrontFooter, StorefrontHeader } from "@/components/shop/StorefrontShell";
-import { isSiteIndexingEnabled } from "@/lib/server/env";
+import { getPublicSiteUrl, isSiteIndexingEnabled } from "@/lib/server/env";
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const siteUrl = getPublicSiteUrl();
 
 const notoSans = Noto_Sans_JP({
   subsets: ["latin"],
@@ -23,7 +23,7 @@ const notoSerif = Noto_Serif_JP({
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: siteUrl,
   title: {
     default: "MOOR SPICE｜毎日の料理に、イタリアの風を。",
     template: "%s | MOOR SPICE"

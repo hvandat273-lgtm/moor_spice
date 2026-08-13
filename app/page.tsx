@@ -14,6 +14,7 @@ import {
   UspStrip
 } from "@/components/shop/HomeSections";
 import { getHomepageCatalog } from "@/lib/server/catalog";
+import { getPublicSiteUrl } from "@/lib/server/env";
 
 export const dynamic = "force-dynamic";
 
@@ -25,12 +26,13 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const { heroProduct, featuredProduct } = await getHomepageCatalog();
+  const siteUrl = getPublicSiteUrl().origin;
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "MOOR SPICE",
-    url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-    logo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/brand/logo.svg`
+    url: siteUrl,
+    logo: `${siteUrl}/brand/logo.svg`
   };
 
   const hasCatalogContent = Boolean(heroProduct || featuredProduct);

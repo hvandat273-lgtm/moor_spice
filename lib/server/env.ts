@@ -5,7 +5,7 @@ import { getDatabase } from "@/db/client";
 import { databaseEnvironmentGuards } from "@/db/schema";
 
 const deploymentModeSchema = z.enum(["demo", "catalog", "production"]);
-const catalogBackendSchema = z.enum(["local-json", "vercel-blob", "postgres"]);
+const catalogBackendSchema = z.enum(["bundled-json", "local-json", "vercel-blob", "postgres"]);
 
 export type DeploymentMode = z.infer<typeof deploymentModeSchema>;
 export type CatalogBackend = z.infer<typeof catalogBackendSchema>;
@@ -41,14 +41,17 @@ export function getCatalogBackend(): CatalogBackend | null {
     return backend;
   }
   if (process.env.DATABASE_URL?.trim()) return "postgres";
-  if (process.env.VERCEL || readDeploymentMode() === "production") return null;
+  // A fresh Vercel import must be deployable before storage credentials exist.
+  // The bundled catalogue is read-only; configuring Blob explicitly enables Admin.
+  if (process.env.VERCEL) return "bundled-json";
+  if (readDeploymentMode() === "production") return null;
   return "local-json";
 }
 
 export function requireCatalogBackend(): CatalogBackend {
   const backend = getCatalogBackend();
   if (!backend) {
-    throw new Error("CATALOG_BACKEND is required (local-json, vercel-blob or postgres)");
+    throw new Error("CATALOG_BACKEND is required (bundled-json, local-json, vercel-blob or postgres)");
   }
   return backend;
 }
@@ -59,7 +62,7 @@ export function hasCatalogBackend(): boolean {
 
 export function usesJsonCatalogBackend(): boolean {
   const backend = getCatalogBackend();
-  return backend === "local-json" || backend === "vercel-blob";
+  return backend === "bundled-json" || backend === "local-json" || backend === "vercel-blob";
 }
 
 export function usesPostgresCatalogBackend(): boolean {
@@ -118,6 +121,10 @@ export async function assertProductionDatabaseIdentity(): Promise<void> {
 }
 
 export function getPublicSiteUrl(): URL {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  return new URL(raw);
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (configured) return new URL(configured);
+
+  const vercelHostname = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim()
+    || process.env.VERCEL_URL?.trim();
+  return new URL(vercelHostname ? `https://${vercelHostname}` : "http://localhost:3000");
 }

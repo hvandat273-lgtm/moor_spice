@@ -5,12 +5,14 @@ import path from "node:path";
 import { BlobPreconditionFailedError, get, put } from "@vercel/blob";
 import { z } from "zod";
 import { cache } from "react";
+import bundledShowcaseCatalog from "@/data/showcase-catalog.json";
+import { getCatalogBackend } from "@/lib/server/env";
 
-export type CatalogBackend = "local-json" | "vercel-blob" | "postgres";
+export type CatalogBackend = "bundled-json" | "local-json" | "vercel-blob" | "postgres";
+export { getCatalogBackend };
 
 const CATALOG_BLOB_PATHNAME = "moon-spice/catalog/v1/catalog.json";
 const LOCAL_CATALOG_PATH = path.join(process.cwd(), ".data", "catalog.json");
-const BUNDLED_SHOWCASE_PATH = path.join(process.cwd(), "data", "showcase-catalog.json");
 
 function localCatalogPath(): string {
   const persistentRuntimeOverride = process.env.RENDER
@@ -23,7 +25,7 @@ function localCatalogPath(): string {
   const testOverride = process.env.NODE_ENV === "test" || e2eOverrideAllowed
     ? process.env.CATALOG_LOCAL_PATH?.trim()
     : undefined;
-  return path.resolve(persistentRuntimeOverride || testOverride || LOCAL_CATALOG_PATH);
+  return path.resolve(/*turbopackIgnore: true*/ persistentRuntimeOverride || testOverride || LOCAL_CATALOG_PATH);
 }
 
 function usesPersistentRenderCatalogPath(): boolean {
@@ -297,22 +299,6 @@ export function parseCatalogDocument(value: unknown): CatalogDocument {
   return catalogDocumentSchema.parse(value);
 }
 
-export function getCatalogBackend(): CatalogBackend {
-  const configured = process.env.CATALOG_BACKEND?.trim();
-  if (configured) {
-    const backend = z.enum(["local-json", "vercel-blob", "postgres"]).parse(configured);
-    if (backend === "local-json" && process.env.VERCEL) {
-      throw new Error("CATALOG_BACKEND=local-json is not persistent on Vercel; use vercel-blob");
-    }
-    return backend;
-  }
-  if (process.env.DATABASE_URL?.trim()) return "postgres";
-  if (process.env.VERCEL || process.env.DEPLOYMENT_MODE === "production") {
-    throw new Error("CATALOG_BACKEND must be explicitly configured on Vercel/production");
-  }
-  return "local-json";
-}
-
 function requireCatalogBlobToken(): string {
   const token = process.env.CATALOG_BLOB_READ_WRITE_TOKEN?.trim();
   if (!token) throw new Error("CATALOG_BLOB_READ_WRITE_TOKEN is required for CATALOG_BACKEND=vercel-blob");
@@ -322,22 +308,22 @@ function requireCatalogBlobToken(): string {
 async function readLocalDocument(): Promise<CatalogDocument> {
   const localPath = localCatalogPath();
   try {
-    return parseCatalogDocument(JSON.parse(await readFile(localPath, "utf8")));
+    return parseCatalogDocument(JSON.parse(await readFile(/*turbopackIgnore: true*/ localPath, "utf8")));
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") {
       if (usesPersistentRenderCatalogPath()) {
-        try {
-          const bundled = parseCatalogDocument(JSON.parse(await readFile(BUNDLED_SHOWCASE_PATH, "utf8")));
-          await writeLocalDocument(bundled);
-          return bundled;
-        } catch (bundledError) {
-          if ((bundledError as NodeJS.ErrnoException).code !== "ENOENT") throw bundledError;
-        }
+        const bundled = readBundledDocument();
+        await writeLocalDocument(bundled);
+        return bundled;
       }
       return emptyCatalogDocument();
     }
     throw error;
   }
+}
+
+function readBundledDocument(): CatalogDocument {
+  return parseCatalogDocument(bundledShowcaseCatalog);
 }
 
 async function readBlobDocument(): Promise<{ document: CatalogDocument; etag: string | null }> {
@@ -350,6 +336,7 @@ async function readBlobDocument(): Promise<{ document: CatalogDocument; etag: st
 
 async function readCatalogDocumentUncached(): Promise<CatalogDocument> {
   const backend = getCatalogBackend();
+  if (backend === "bundled-json") return readBundledDocument();
   if (backend === "local-json") return readLocalDocument();
   if (backend === "vercel-blob") return (await readBlobDocument()).document;
   throw new Error("Catalog document store is not used when CATALOG_BACKEND=postgres");
@@ -375,10 +362,10 @@ async function withLocalMutationLock<T>(operation: () => Promise<T>): Promise<T>
 
 async function writeLocalDocument(document: CatalogDocument): Promise<void> {
   const localPath = localCatalogPath();
-  await mkdir(path.dirname(localPath), { recursive: true });
+  await mkdir(/*turbopackIgnore: true*/ path.dirname(localPath), { recursive: true });
   const temporaryPath = `${localPath}.${process.pid}.${randomUUID()}.tmp`;
-  await writeFile(temporaryPath, `${JSON.stringify(document, null, 2)}\n`, { encoding: "utf8", flag: "wx" });
-  await rename(temporaryPath, localPath);
+  await writeFile(/*turbopackIgnore: true*/ temporaryPath, `${JSON.stringify(document, null, 2)}\n`, { encoding: "utf8", flag: "wx" });
+  await rename(/*turbopackIgnore: true*/ temporaryPath, localPath);
 }
 
 async function prepareMutation<T>(source: CatalogDocument, mutation: (draft: CatalogDocument) => T | Promise<T>): Promise<{ document: CatalogDocument; result: T }> {
@@ -415,6 +402,7 @@ async function mutateBlobDocument<T>(mutation: (draft: CatalogDocument) => T | P
 
 export async function mutateCatalogDocument<T>(mutation: (draft: CatalogDocument) => T | Promise<T>): Promise<{ document: CatalogDocument; result: T }> {
   const backend = getCatalogBackend();
+  if (backend === "bundled-json") throw new Error("The bundled catalogue is read-only; configure CATALOG_BACKEND=vercel-blob to enable Admin updates");
   if (backend === "vercel-blob") return mutateBlobDocument(mutation);
   if (backend === "postgres") throw new Error("Catalog document mutations are not used when CATALOG_BACKEND=postgres");
   return withLocalMutationLock(async () => {
