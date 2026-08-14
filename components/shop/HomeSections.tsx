@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { ArrowRight, BookOpenCheck, ChefHat, Layers3, Leaf, Sparkles } from "lucide-react";
 
 import { formatWeight } from "@/lib/format";
@@ -22,9 +23,12 @@ export function HeroProduct({ product }: { product: Product }) {
           fetchPriority="high"
           fill
           loading="eager"
-          sizes="(max-width: 767px) 1px, 100vw"
+          sizes="100vw"
           src={scene.url}
-          style={{ objectPosition: [scene.focalX ?? 54, scene.focalY ?? 50].join("% ") + "%" }}
+          style={{
+            "--hero-focal-x": `${scene.focalX ?? 54}%`,
+            "--hero-focal-y": `${scene.focalY ?? 50}%`,
+          } as CSSProperties}
         />
       ) : null}
       <div className={styles.heroScrim} />
@@ -68,9 +72,14 @@ const usps = [
 export function UspStrip() {
   return (
     <section aria-label="パスタマジックパウダーの特長" className={styles.uspStrip}>
-      <div className={styles.uspInner}>
-        {usps.map(({ index, icon: Icon, title, description }) => (
-          <div className={styles.uspItem} key={title}>
+      <div className={`${styles.uspInner} reveal-stage`}>
+        {usps.map(({ index, icon: Icon, title, description }, motionIndex) => (
+          <div
+            className={styles.uspItem}
+            data-reveal="tilt"
+            key={title}
+            style={{ "--i": motionIndex } as CSSProperties}
+          >
             <span className={styles.uspIcon}><Icon aria-hidden="true" size={26} strokeWidth={1.3} /></span>
             <div>
               <p className={styles.uspIndex}><span aria-hidden="true">{index}</span></p>
@@ -100,22 +109,29 @@ export function UsageShowcase({ product }: { product: Product }) {
         <div className="deck-meta">
           <span className="deck-kicker">06 Suggested Uses</span>
         </div>
-        <h2 className="deck-title" id="usage-title">おすすめの使い方</h2>
-        <p className="deck-sub">Serving Suggestions — ひとさじで広がる、いつもの一皿。</p>
+        <h2 className="deck-title" data-reveal="clip" id="usage-title">おすすめの使い方</h2>
+        <p className="deck-sub" data-reveal="fade">Serving Suggestions — ひとさじで広がる、いつもの一皿。</p>
       </header>
 
       {suggestions.length > 0 ? (
-        <div className={styles.usageGrid}>
-          {suggestions.map((suggestion) => (
-            <figure key={suggestion.id}>
-              <Image alt={suggestion.image.alt || suggestion.title} fill sizes="(max-width: 767px) 44vw, 260px" src={suggestion.image.url} style={{ objectPosition: [suggestion.image.focalX ?? 50, suggestion.image.focalY ?? 50].join("% ") + "%" }} />
+        <div className={`${styles.usageGrid} reveal-stage`}>
+          {suggestions.map((suggestion, index) => (
+            <figure data-reveal="tilt" key={suggestion.id} style={{ "--i": index } as CSSProperties}>
+              <Image
+                alt={suggestion.image.alt || suggestion.title}
+                fill
+                quality={82}
+                sizes="(max-width: 767px) 44vw, (max-width: 1119px) 46vw, 260px"
+                src={suggestion.image.url}
+                style={{ objectPosition: [suggestion.image.focalX ?? 50, suggestion.image.focalY ?? 50].join("% ") + "%" }}
+              />
               <figcaption>{suggestion.title}</figcaption>
             </figure>
           ))}
         </div>
       ) : <p className={styles.usageFallback}>{product.usage || "おすすめの使い方は現在準備中です。"}</p>}
 
-      <Link className={styles.sectionLink} href="/recipes">基本のレシピを見る <ArrowRight aria-hidden="true" size={15} /></Link>
+      <Link className={styles.sectionLink} data-reveal href="/recipes">基本のレシピを見る <ArrowRight aria-hidden="true" size={15} /></Link>
     </section>
   );
 }
@@ -125,11 +141,11 @@ export function FeaturedProductBanner({ product }: { product: Product }) {
   const firstVariant = activeVariants(product)[0];
   return (
     <section aria-labelledby="featured-title" className={styles.featuredBanner}>
-      {scene ? <Image alt="" aria-hidden="true" className={styles.featuredScene} fill sizes="1280px" src={scene.url} /> : null}
+      {scene ? <Image alt="" aria-hidden="true" className={styles.featuredScene} data-kenburns fill sizes="1280px" src={scene.url} /> : null}
       <div className={styles.featuredCopy}>
-        <p className={styles.eyebrow}>毎日のパスタに、ひとさじの魔法を。</p>
-        <h2 id="featured-title">{product.name}</h2>
-        <p>{product.shortDescription}</p>
+        <p className={styles.eyebrow} data-reveal="fade">毎日のパスタに、ひとさじの魔法を。</p>
+        <h2 data-reveal="clip" id="featured-title">{product.name}</h2>
+        <p data-reveal>{product.shortDescription}</p>
         {firstVariant ? <p className={styles.featuredIntroPrice}>内容量 {formatWeight(firstVariant.weightGrams)}</p> : null}
         <Link className={styles.primaryButton} href="/recipes">基本のレシピを見る</Link>
       </div>

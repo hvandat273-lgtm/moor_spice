@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CookingPot, Quote, UtensilsCrossed } from "lucide-react";
+import type { CSSProperties } from "react";
 
 import {
   chefProfile,
@@ -24,10 +25,10 @@ function DeckHeader({ meta, titleId }: { meta: DeckSectionMeta; titleId: string 
           {meta.page}
         </span>
       </div>
-      <h2 className="deck-title" id={titleId}>
+      <h2 className="deck-title" data-reveal="clip" id={titleId}>
         {meta.title}
       </h2>
-      <p className="deck-sub">{meta.subtitle}</p>
+      <p className="deck-sub" data-reveal="fade">{meta.subtitle}</p>
     </header>
   );
 }
@@ -40,7 +41,7 @@ export function ChefProfileSection() {
     <section aria-labelledby="chef-title" className="deck-section" id="chef">
       <DeckHeader meta={meta} titleId="chef-title" />
       <div className={styles.chefLayout}>
-        <figure className={styles.chefPortrait}>
+        <figure className={styles.chefPortrait} data-reveal="scale">
           <Image
             alt={portrait.alt}
             height={963}
@@ -52,14 +53,14 @@ export function ChefProfileSection() {
         </figure>
 
         <div className={styles.chefBody}>
-          <p className={styles.chefLead}>{lead}</p>
-          <p className={styles.chefBio}>{biography}</p>
+          <p className={styles.chefLead} data-reveal>{lead}</p>
+          <p className={styles.chefBio} data-lines>{biography}</p>
 
           <div className={styles.timeline}>
             <h3>{highlightsLabel}</h3>
             <ol>
-              {highlights.map((item) => (
-                <li key={item.year}>
+              {highlights.map((item, index) => (
+                <li data-reveal key={item.year} style={{ "--i": index } as CSSProperties}>
                   <span className={styles.timelineYear}>{item.year}</span>
                   <span>{item.text}</span>
                 </li>
@@ -80,16 +81,18 @@ export function YudeTheorySection() {
     <section aria-labelledby="yude-title" className="deck-section" id="yude-theory">
       <DeckHeader meta={meta} titleId="yude-title" />
 
-      <blockquote className={styles.theoryQuote}>
+      <blockquote className={styles.theoryQuote} data-reveal="clip">
         <Quote aria-hidden="true" size={26} strokeWidth={1.6} />
         <p>{quote}</p>
       </blockquote>
 
-      <div className={styles.theoryGrid}>
-        {columns.map((column) => (
+      <div className={`${styles.theoryGrid} reveal-stage`}>
+        {columns.map((column, index) => (
           <article
             className={column.featured ? `${styles.theoryCard} ${styles.theoryCardFeatured}` : styles.theoryCard}
+            data-reveal="tilt"
             key={column.id}
+            style={{ "--i": index } as CSSProperties}
           >
             <p className={styles.theoryKicker}>{column.kicker}</p>
             <h3>{column.title}</h3>
@@ -98,7 +101,7 @@ export function YudeTheorySection() {
               <small>{column.unit}</small>
             </p>
             <div aria-hidden="true" className={styles.theoryMeter}>
-              <span style={{ width: `${Math.round(column.fill * 100)}%` }} />
+              <span data-meter style={{ width: `${Math.round(column.fill * 100)}%` }} />
             </div>
             <p className={styles.theoryCaption}>{column.caption}</p>
             <p className={styles.theoryBody}>{column.body}</p>
@@ -121,7 +124,7 @@ export function ItalianSouvenirSection() {
       <p className={`deck-note ${styles.souvenirNote}`}>{note}</p>
 
       <div className={styles.souvenirLayout}>
-        <figure className={styles.souvenirPack}>
+        <figure className={styles.souvenirPack} data-reveal="scale">
           <Image
             alt={image.alt}
             height={1128}
@@ -133,12 +136,12 @@ export function ItalianSouvenirSection() {
         </figure>
 
         <div className={styles.souvenirBody}>
-          <p className={styles.souvenirLead}>{lead}</p>
-          <p className={styles.souvenirText}>{body}</p>
+          <p className={styles.souvenirLead} data-reveal>{lead}</p>
+          <p className={styles.souvenirText} data-lines>{body}</p>
 
           <ul className={styles.featureRow}>
-            {features.map((feature) => (
-              <li key={feature.index}>
+            {features.map((feature, index) => (
+              <li data-reveal key={feature.index} style={{ "--i": index } as CSSProperties}>
                 <p className={styles.featureKicker}>
                   <span aria-hidden="true">{feature.index}</span> {feature.kicker}
                 </p>
@@ -148,7 +151,7 @@ export function ItalianSouvenirSection() {
             ))}
           </ul>
 
-          <aside className={`deck-panel ${styles.proposal}`}>
+          <aside className={`deck-panel ${styles.proposal}`} data-reveal>
             <p className={styles.proposalLabel}>{proposalLabel}</p>
             <p className={styles.proposalText}>{proposal}</p>
           </aside>
@@ -168,7 +171,7 @@ export function CookingMethodSection() {
       <DeckHeader meta={meta} titleId="method-title" />
 
       <div className={styles.methodLayout}>
-        <aside className={styles.methodAside}>
+        <aside className={styles.methodAside} data-reveal="scale">
           <section className={styles.methodBlock}>
             <h3>
               <CookingPot aria-hidden="true" size={17} strokeWidth={1.5} /> {equipmentLabel}
@@ -202,8 +205,13 @@ export function CookingMethodSection() {
         <div className={styles.methodSteps}>
           <p className={styles.methodStepsLabel}>{methodLabel}</p>
           <ol>
-            {steps.map((step) => (
-              <li className={"final" in step && step.final ? styles.stepFinal : undefined} key={step.no}>
+            {steps.map((step, index) => (
+              <li
+                className={"final" in step && step.final ? styles.stepFinal : undefined}
+                data-reveal
+                key={step.no}
+                style={{ "--i": index } as CSSProperties}
+              >
                 <span aria-hidden="true" className={styles.stepNumber}>
                   {step.no}
                 </span>
@@ -230,9 +238,10 @@ export function IngredientPanelSection() {
       <DeckHeader meta={meta} titleId="ingredients-title" />
 
       <div className={styles.ingredientLayout}>
-        <figure className={styles.ingredientFigure}>
+        <figure className={styles.ingredientFigure} data-reveal="scale">
           <Image
             alt={image.alt}
+            data-kenburns
             fill
             sizes="(max-width: 47.99rem) 92vw, 46vw"
             src={image.src}
@@ -243,8 +252,8 @@ export function IngredientPanelSection() {
 
         <div className={styles.ingredientBody}>
           <dl className={styles.statRow}>
-            {stats.map((stat) => (
-              <div key={stat.label}>
+            {stats.map((stat, index) => (
+              <div data-reveal="clip" key={stat.label} style={{ "--i": index } as CSSProperties}>
                 <dt>{stat.label}</dt>
                 <dd>
                   <span>{stat.value}</span>
@@ -256,8 +265,8 @@ export function IngredientPanelSection() {
 
           <p className={styles.ingredientListLabel}>{listLabel}</p>
           <ul className={styles.ingredientList}>
-            {items.map((item) => (
-              <li key={item.name}>
+            {items.map((item, index) => (
+              <li data-reveal="fade" key={item.name} style={{ "--i": index } as CSSProperties}>
                 <span aria-hidden="true" className={styles.swatch} style={{ background: item.swatch }} />
                 <span className={styles.ingredientName}>{item.name}</span>
                 {showFormulation && item.grams ? (

@@ -17,6 +17,7 @@ export async function StorefrontHeader() {
     <>
       <div className={styles.announcement}>{announcement}</div>
       <header className={styles.siteHeader}>
+        <span aria-hidden="true" className={styles.headerProgress} data-scroll-progress />
         <div className={styles.headerInner}>
           <MobileNavigation />
 

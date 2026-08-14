@@ -1,0 +1,162 @@
+/* Scroll-driven motion adapted from moon_spicev2. Every effect is additive:
+ * browsers without view timelines render the complete, static page. */
+
+@supports (animation-timeline: view()) {
+  [data-reveal] {
+    animation: reveal-rise linear both;
+    animation-timeline: view();
+    animation-range-start: entry calc(4% + var(--i, 0) * 3%);
+    animation-range-end: cover calc(22% + var(--i, 0) * 3%);
+  }
+
+  [data-reveal="fade"] {
+    animation-name: reveal-fade;
+  }
+
+  [data-reveal="scale"] {
+    animation-name: reveal-scale;
+  }
+
+  [data-reveal="tilt"] {
+    animation-name: reveal-tilt;
+  }
+
+  [data-reveal="clip"] {
+    animation-name: reveal-clip;
+  }
+
+  [data-lines] {
+    animation: lines-in linear both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 42%;
+  }
+
+  [data-kenburns] {
+    animation: kenburns-push linear both;
+    animation-timeline: view();
+    animation-range: cover;
+    will-change: transform;
+  }
+
+  [data-meter] {
+    animation: meter-fill linear both;
+    animation-timeline: view();
+    animation-range: entry 18% cover 48%;
+    transform-origin: left center;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  [data-scroll-progress] {
+    animation: progress-grow linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+.reveal-stage {
+  perspective: 1200px;
+}
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    translate: 0 2.25rem;
+    filter: blur(6px);
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+    filter: blur(0);
+  }
+}
+
+@keyframes reveal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes reveal-scale {
+  from {
+    opacity: 0;
+    scale: 0.94;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes reveal-tilt {
+  from {
+    opacity: 0;
+    rotate: x 9deg;
+    translate: 0 2rem;
+  }
+
+  to {
+    opacity: 1;
+    rotate: x 0deg;
+    translate: 0 0;
+  }
+}
+
+@keyframes reveal-clip {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    translate: 0 0.75rem;
+  }
+
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 -10% 0);
+    translate: 0 0;
+  }
+}
+
+@keyframes lines-in {
+  from {
+    opacity: 0.2;
+    mask-image: linear-gradient(to bottom, #000 0%, transparent 0%);
+  }
+
+  to {
+    opacity: 1;
+    mask-image: linear-gradient(to bottom, #000 100%, transparent 100%);
+  }
+}
+
+@keyframes kenburns-push {
+  from { transform: scale(1.02) translate3d(0, 0, 0); }
+  to { transform: scale(1.12) translate3d(0, -1.25%, 0); }
+}
+
+@keyframes meter-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes progress-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-lines],
+  [data-kenburns],
+  [data-meter],
+  [data-scroll-progress] {
+    animation: none !important;
+    opacity: 1 !important;
+    translate: none !important;
+    rotate: none !important;
+    scale: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    mask-image: none !important;
+  }
+}

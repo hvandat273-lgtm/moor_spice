@@ -50,6 +50,19 @@
   backdrop-filter: blur(16px);
 }
 
+.headerProgress {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: var(--vermilion);
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
 .headerInner {
   width: min(calc(100% - clamp(2rem, 8vw, 8rem)), 1280px);
   min-height: 78px;
@@ -238,6 +251,28 @@
 .heroScene {
   z-index: -3;
   object-fit: cover;
+  object-position: var(--hero-focal-x, 54%) var(--hero-focal-y, 50%);
+  filter: saturate(1.04) brightness(0.94) contrast(1.08);
+  transform: scale(1.04);
+}
+
+/* Match the cinematic camera pass in moon_spicev2: the photograph moves on
+ * its own, completes one leg in 12 seconds and never reads pointer input. */
+@media (prefers-reduced-motion: no-preference) and (min-width: 48rem) {
+  .heroScene {
+    animation: hero-camera-drift 12s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+}
+
+@keyframes hero-camera-drift {
+  from {
+    transform: scale(1.055) translate3d(-0.35%, 0.2%, 0);
+  }
+
+  to {
+    transform: scale(1.105) translate3d(0.45%, -0.55%, 0);
+  }
 }
 
 .heroScrim {
@@ -1311,7 +1346,14 @@
   }
 
   .heroScrim {
-    background: linear-gradient(90deg, rgb(247 243 234 / 98%) 0%, rgb(247 243 234 / 88%) 45%, rgb(247 243 234 / 22%) 70%, transparent);
+    background: linear-gradient(
+      90deg,
+      rgb(247 243 234 / 98%) 0%,
+      rgb(247 243 234 / 92%) 28%,
+      rgb(247 243 234 / 70%) 38%,
+      rgb(247 243 234 / 22%) 46%,
+      transparent 56%
+    );
   }
 
   .heroPackshot {
@@ -1426,30 +1468,43 @@
   }
 
   .hero {
-    min-height: auto;
+    min-height: clamp(42rem, 178vw, 48rem);
     background: linear-gradient(145deg, #efe4d3, #f8f2e7);
   }
 
   .heroScene {
-    display: none;
+    display: block;
+    object-position: 64% var(--hero-focal-y, 50%);
+    filter: saturate(1.04) brightness(0.92) contrast(1.08);
   }
 
   .heroScrim {
     background:
-      radial-gradient(circle at 88% 80%, rgb(75 81 43 / 13%), transparent 42%),
-      linear-gradient(145deg, rgb(255 253 248 / 40%), transparent);
+      linear-gradient(
+        180deg,
+        rgb(247 243 234 / 98%) 0%,
+        rgb(247 243 234 / 94%) 34%,
+        rgb(247 243 234 / 68%) 50%,
+        rgb(247 243 234 / 12%) 70%,
+        rgb(30 47 36 / 8%) 100%
+      ),
+      linear-gradient(90deg, rgb(247 243 234 / 22%), transparent 72%);
   }
 
   .heroContent {
     width: min(calc(100% - 2rem), 440px);
-    min-height: auto;
+    min-height: inherit;
     grid-template-columns: 1fr;
-    padding-block: 2rem 2.5rem;
+    align-content: start;
+    padding-block: 1.5rem 2.5rem;
   }
 
   .heroCopy {
-    display: contents;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     grid-column: auto;
+    padding-block: 1rem 0;
     text-align: center;
   }
 
@@ -1470,18 +1525,18 @@
     font-size: 0.82rem !important;
   }
 
-  .heroDescription {
+  .heroRule {
     order: 4;
+  }
+
+  .heroDescription {
+    order: 5;
     margin: 0.9rem auto 0;
     font-size: 0.82rem;
   }
 
   .heroPackshot {
-    display: block;
-    width: min(76vw, 340px);
-    height: 390px;
-    order: 5;
-    margin: 0.5rem auto 1.25rem;
+    display: none;
   }
 
   .heroActions {
@@ -1499,14 +1554,14 @@
   }
 
   .heroAside {
-    position: static;
+    position: absolute;
+    right: 1.25rem;
+    bottom: 1.5rem;
     display: flex;
-    grid-column: auto;
     width: auto;
-    margin-bottom: 1.8rem;
     align-items: center;
-    order: 7;
-    margin-top: 1.4rem;
+    margin: 0;
+    padding: 0;
   }
 
   .heroSeal {
