@@ -44,10 +44,11 @@ export function ChefProfileSection() {
         <figure className={styles.chefPortrait} data-reveal="scale">
           <Image
             alt={portrait.alt}
-            height={963}
-            sizes="(max-width: 47.99rem) 62vw, 340px"
+            height={1536}
+            quality={82}
+            sizes="(max-width: 47.99rem) calc(100vw - 3.5rem), 320px"
             src={portrait.src}
-            width={640}
+            width={1024}
           />
           <figcaption>{portrait.caption}</figcaption>
         </figure>
@@ -127,10 +128,11 @@ export function ItalianSouvenirSection() {
         <figure className={styles.souvenirPack} data-reveal="scale">
           <Image
             alt={image.alt}
-            height={1128}
-            sizes="(max-width: 47.99rem) 58vw, 300px"
+            height={1600}
+            quality={82}
+            sizes="(max-width: 47.99rem) calc(100vw - 3.75rem), 300px"
             src={image.src}
-            width={720}
+            width={1600}
           />
           <figcaption>{image.caption}</figcaption>
         </figure>
